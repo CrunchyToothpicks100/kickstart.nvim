@@ -99,7 +99,7 @@ do
   vim.g.maplocalleader = ' '
 
   -- Set to true if you have a Nerd Font installed and selected in the terminal
-  vim.g.have_nerd_font = false
+  vim.g.have_nerd_font = true
 
   -- [[ Setting options ]]
   --  See `:help vim.o`
@@ -110,7 +110,7 @@ do
   vim.o.number = true
   -- You can also add relative line numbers, to help with jumping.
   --  Experiment for yourself to see if you like it!
-  -- vim.o.relativenumber = true
+  vim.o.relativenumber = true
 
   -- Enable mouse mode, can be useful for resizing splits for example!
   vim.o.mouse = 'a'
@@ -184,6 +184,9 @@ do
   -- Clear highlights on search when pressing <Esc> in normal mode
   --  See `:help hlsearch`
   vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+
+  -- My custom keymaps
+  require('oliver.keymaps')
 
   -- Diagnostic Config & Keymaps
   --  See `:help vim.diagnostic.Opts`
@@ -581,7 +584,21 @@ do
   )
 
   -- Shortcut for searching your Neovim configuration files
+<<<<<<< HEAD
   vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config', follow = true } end, { desc = '[S]earch [N]eovim files' })
+=======
+  vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
+
+  -- Shortcut for changing colorscheme
+  vim.keymap.set('n', '<leader>cs', function() builtin.colorscheme {} end, {desc = '[C]olor [S]cheme'})
+
+  -- S-tier: habamax, tokyonight-night, tokyonight, tokyonight-moon, sorbet, miniwinter (dark), miniautumn (dark), slate, retrobox (light), minicyan (light)
+  -- A-tier: zaibatsu, minischeme (dark), minicyan (light), minisummer (light), miniautumn (light)
+  -- B-tier: retrobox (dark), unokai, minisummer (dark), miniautumn (dark), shine, minischeme (light)
+  -- C-tier: mlunaperche (light), lunaperche (dark), inicyan (dark), industry, pablo
+  -- D-tier: elflord
+  -- F-tier: delek, zellner
+>>>>>>> 5b9b6a8 (Require neo-tree, add keymaps)
 end
 
 -- ============================================================
@@ -969,14 +986,14 @@ do
   -- require 'kickstart.plugins.debug'
   -- require 'kickstart.plugins.indent_line'
   -- require 'kickstart.plugins.lint'
-  -- require 'kickstart.plugins.autopairs'
-  -- require 'kickstart.plugins.neo-tree'
+  require 'kickstart.plugins.autopairs'
+  require 'kickstart.plugins.neo-tree'
   -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- require 'custom.plugins'
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
