@@ -16,6 +16,9 @@ end, { desc = 'Reload source files' })
 -- Window
 vim.keymap.set('n', '<F3>', '<Cmd>sp ~/.config/nvim/lua/oliver/keymaps.lua<CR>', { desc = 'Keymap Split' })
 vim.keymap.set('n', '<F2>', '<Cmd>vert sp ~/.config/nvim/lua/oliver/keymaps.lua<CR>', { desc = 'Vertical Keymap Split' })
+vim.keymap.set('n', '<A-i>', '<Cmd>10split | term<CR><S-a>', { desc = 'CL[I]'})
+vim.keymap.set('t', '<A-k>', '<C-\\><C-n><C-w>k')
+vim.keymap.set('t', '<A-q>', '<C-\\><C-n><Cmd>bd!<CR>')
 
 -- Colorscheme
 vim.keymap.set('n', '<leader>c', function() builtin.colorscheme {} end, { desc = '[C]olor Scheme' })
