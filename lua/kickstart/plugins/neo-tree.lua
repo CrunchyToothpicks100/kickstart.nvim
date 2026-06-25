@@ -7,15 +7,7 @@ vim.pack.add {
   'https://github.com/MunifTanjim/nui.nvim',
 }
 
-<<<<<<< HEAD
-vim.keymap.set('n', '\\', '<Cmd>Neotree reveal<CR>', { desc = 'NeoTree reveal', silent = true })
-=======
-if vim.g.have_nerd_font then
-  table.insert(plugins, 'https://github.com/nvim-tree/nvim-web-devicons') -- not strictly required, but recommended
-end
-
-vim.pack.add(plugins)
->>>>>>> 5b9b6a8 (Require neo-tree, add keymaps)
+vim.keymap.set('n', '\\', '<Cmd>Neotree toggle<CR>', { desc = 'NeoTree reveal', silent = true })
 
 require('neo-tree').setup {
   filesystem = {
