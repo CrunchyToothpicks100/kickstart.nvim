@@ -587,15 +587,6 @@ do
   vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config', follow = true } end, { desc = '[S]earch [N]eovim files' })
   vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
 
-  -- Shortcut for changing colorscheme
-  vim.keymap.set('n', '<leader>cs', function() builtin.colorscheme {} end, {desc = '[C]olor [S]cheme'})
-
-  -- S-tier: habamax, tokyonight-night, tokyonight, tokyonight-moon, sorbet, miniwinter (dark), miniautumn (dark), slate, retrobox (light), minicyan (light)
-  -- A-tier: zaibatsu, minischeme (dark), minicyan (light), minisummer (light), miniautumn (light)
-  -- B-tier: retrobox (dark), unokai, minisummer (dark), miniautumn (dark), shine, minischeme (light)
-  -- C-tier: mlunaperche (light), lunaperche (dark), inicyan (dark), industry, pablo
-  -- D-tier: elflord
-  -- F-tier: delek, zellner
 end
 
 -- ============================================================
