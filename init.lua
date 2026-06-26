@@ -982,7 +982,6 @@ do
   require 'oliver.keymaps'
   require 'oliver.options'
 
-  print("Hello from init.lua!")
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
