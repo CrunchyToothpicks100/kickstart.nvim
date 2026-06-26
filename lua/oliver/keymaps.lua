@@ -1,7 +1,7 @@
 local builtin = require 'telescope.builtin'
 
 -- Basic
-vim.keymap.set('n', '<S-j>', '<C-e>', { desc = 'Scroll Down' })
+vim.keymap.set('n', '<Space>j', '<C-e>', { desc = 'Scroll Down' })
 vim.keymap.set('n', '<S-k>', '<C-y>', { desc = 'Scroll Up' })
 
 -- Reload
@@ -31,7 +31,7 @@ vim.keymap.set('n', '<Leader>b', function()
 end, { desc = "Toggle dark/light [B]ackground" })
 
 -- S-tier: tokyonight-night, tokyonight-storm, tokyonight, catppuccin, habamax, miniwinter (dark), miniautumn (dark)
--- A-tier: minischeme (dark), minicyan (light), minisummer (light), minispring (light), miniautumn (light), sorbet, unokai, zaibatsu
+-- A-tier: minischeme (dark), minisummer (light), minispring (light), minicyan (light), miniautumn (light), sorbet, unokai, zaibatsu
 -- B-tier: wildcharm, quiet (dark), quiet (light), desert, slate, retrobox (dark), retrobox (light), minisummer (dark), miniautumn (dark), minicyan (dark)
 -- C-tier: peachpuff, shine, lunaperche (light), minischeme (light), lunaperche (dark), darkblue, evening, morning
 -- D-tier: murphy, blue, ron, torte, vim, industry, delek, zellner

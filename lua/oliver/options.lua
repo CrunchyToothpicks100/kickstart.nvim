@@ -1,3 +1,3 @@
-vim.opt.hlsearch = false
+vim.o.hlsearch = false
 
 print("Hello from options.lua!")
