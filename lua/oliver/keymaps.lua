@@ -1,8 +1,11 @@
 local builtin = require 'telescope.builtin'
 
+-- ':W' will show a full list of keymaps
+
 -- Basic
 vim.keymap.set('n', '<S-j>', '<C-e>', { desc = 'Scroll Down' })
 vim.keymap.set('n', '<S-k>', '<C-y>', { desc = 'Scroll Up' })
+vim.keymap.set('n', '<C-q>', '<C-v>', { desc = 'Visual Block Mode' })
 
 -- Reload
 vim.keymap.set('n', '<A-s>', function ()
@@ -15,15 +18,50 @@ vim.keymap.set('n', '<A-s>', function ()
 end, { desc = 'Reload source files' })
 
 -- Window
+vim.keymap.set('n', '<leader>j', '<C-w>j', { desc = 'Window down[j]' })
+vim.keymap.set('n', '<leader>k', '<C-w>k', { desc = 'Window up[k]' })
+vim.keymap.set('n', '<leader>h', '<C-w>h', { desc = 'Window left[h]' })
+vim.keymap.set('n', '<leader>l', '<C-w>l', { desc = 'Window right[l]' })
+vim.keymap.set('n', '<leader><S-j>', '<C-w>J<Cmd>res 17<CR>', { desc = 'Move window down[j]' })
+vim.keymap.set('n', '<leader><S-k>', '<C-w>K<Cmd>res 17<CR>', { desc = 'Move window up[k]' })
+vim.keymap.set('n', '<leader><S-h>', '<C-w>H', { desc = 'Move window left[h]' })
+vim.keymap.set('n', '<leader><S-l>', '<C-w>L', { desc = 'Move window right[l]' })
+vim.keymap.set('n', '<leader>z', '<S-z><S-z>', { desc = 'Write and Quit' })
+vim.keymap.set('n', '<leader>T', '<C-w>T', { desc = 'Move window to new [T]ab' })
+
+-- Open specific file
+vim.keymap.set('n', '<F1>', '<Cmd>sp ~/Notes/comp_sci/nvim_todo.md<CR>', { desc = 'TODO Split' })
+vim.keymap.set('n', '<F2>', '<Cmd>sp ~/.config/nvim/init.lua<CR>', { desc = 'init.lua Split' })
 vim.keymap.set('n', '<F3>', '<Cmd>sp ~/.config/nvim/lua/oliver/keymaps.lua<CR>', { desc = 'Keymap Split' })
-vim.keymap.set('n', '<F2>', '<Cmd>vert sp ~/.config/nvim/lua/oliver/keymaps.lua<CR>', { desc = 'Vertical Keymap Split' })
-vim.keymap.set('n', '<A-i>', '<Cmd>10split | term<CR><S-a>', { desc = 'CL[I]'})
-vim.keymap.set('t', '<A-k>', '<C-\\><C-n><C-w>k', { desc = 'Navigate up[k] from terminal' })
-vim.keymap.set('t', '<A-h>', '<C-\\><C-n><C-w>h', { desc = 'Navigate left[h] from terminal' })
-vim.keymap.set('t', '<A-q>', '<C-\\><C-n><Cmd>bd!<CR>', { desc = '[q]uit terminal' })
+
+-- Resize window
+vim.keymap.set('n', '-', '<C-w><S-->', { desc = 'Decrease window height' })
+vim.keymap.set('n', '+', '<C-w><S-+>', { desc = 'Increase window height' })
+vim.keymap.set('n', '<', '<Cmd>vert res -5<CR>', { desc = 'Decrease window width' })
+vim.keymap.set('n', '>', '<Cmd>vert res +5<CR>', { desc = 'Increase window width' })
+
+-- Terminal
+vim.keymap.set('n', '<A-i>', '<Cmd>10sp | term<CR><S-a>', { desc = 'Open CL[I]'})
+vim.keymap.set('t', 'jk', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Colorscheme
-vim.keymap.set('n', '<leader>c', function() builtin.colorscheme {} end, { desc = '[C]olor Scheme' })
+vim.keymap.set('n', '<leader>c', function()
+  builtin.colorscheme {
+    attach_mappings = function(prompt_bufnr, _)
+      local actions = require 'telescope.actions'
+      local action_state = require 'telescope.actions.state'
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        if selection then
+          vim.cmd.colorscheme(selection.value)
+          vim.fn.writefile({ selection.value }, vim.fn.stdpath 'config' .. '/colorscheme')
+        end
+      end)
+      return true
+    end,
+  }
+end, { desc = '[C]olor Scheme' })
 vim.keymap.set('n', '<Leader>b', function()
     if vim.o.background == "dark" then
         vim.o.background = "light"
@@ -32,12 +70,12 @@ vim.keymap.set('n', '<Leader>b', function()
     end
 end, { desc = "Toggle dark/light [B]ackground" })
 
--- S-tier: tokyonight-night, tokyonight-storm, tokyonight, catppuccin, habamax, miniwinter (dark), miniautumn (dark)
--- A-tier: minischeme (dark), minisummer (light), minispring (light), minicyan (light), miniautumn (light), default (dark), default (light), sorbet, unokai, zaibatsu
--- B-tier: wildcharm, quiet (dark), quiet (light), desert, slate, retrobox (dark), retrobox (light), minisummer (dark), miniautumn (dark), minicyan (dark)
--- C-tier: peachpuff, shine, lunaperche (light), minischeme (light), lunaperche (dark), darkblue, evening, morning
--- D-tier: murphy, blue, ron, torte, vim, industry, delek, zellner
--- F-tier: koehler, pablo, elflord
-
--- Insert mode
+-- Escape Insert mode
 vim.keymap.set('i', 'jk', '<Esc>')
+
+-- Diagnostics
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>td', function()
+    vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+end, { desc = '[T]oggle [D]iagnostics' })
+
