@@ -27,7 +27,6 @@ vim.keymap.set('n', '<leader><S-k>', '<C-w>K<Cmd>res 17<CR>', { desc = 'Move win
 vim.keymap.set('n', '<leader><S-h>', '<C-w>H', { desc = 'Move window left[h]' })
 vim.keymap.set('n', '<leader><S-l>', '<C-w>L', { desc = 'Move window right[l]' })
 vim.keymap.set('n', '<leader>z', '<S-z><S-z>', { desc = 'Write and Quit' })
-vim.keymap.set('n', '<leader>T', '<C-w>T', { desc = 'Move window to new [T]ab' })
 
 -- Open specific file
 vim.keymap.set('n', '<F1>', '<Cmd>sp ~/Notes/comp_sci/nvim_todo.md<CR>', { desc = 'TODO Split' })
@@ -41,7 +40,7 @@ vim.keymap.set('n', '<', '<Cmd>vert res -5<CR>', { desc = 'Decrease window width
 vim.keymap.set('n', '>', '<Cmd>vert res +5<CR>', { desc = 'Increase window width' })
 
 -- Terminal
-vim.keymap.set('n', '<A-i>', '<Cmd>10sp | term<CR><S-a>', { desc = 'Open CL[I]'})
+vim.keymap.set('n', '<A-i>', '<Cmd>term<CR>a', { desc = 'Open CL[I]'})
 vim.keymap.set('t', 'jk', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Colorscheme
