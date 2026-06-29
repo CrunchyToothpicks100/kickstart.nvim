@@ -365,11 +365,6 @@ do
     },
   }
 
-  -- Load the colorscheme here.
-  -- Like many other themes, this one has different styles, and you could load
-  -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  vim.cmd.colorscheme 'miniwinter'
-
   -- Highlight todo, notes, etc in comments
   vim.pack.add { gh 'folke/todo-comments.nvim' }
   require('todo-comments').setup { signs = false }
@@ -377,6 +372,10 @@ do
   -- [[ mini.nvim ]]
   --  A collection of various small independent plugins/modules
   vim.pack.add { gh 'nvim-mini/mini.nvim' }
+
+  -- Load the colorscheme here. miniwinter ships with mini.nvim and requires
+  -- mini.hues, so this must come after mini.nvim is loaded above.
+  vim.cmd.colorscheme 'miniwinter'
 
   -- If a nerd font is available, load the icons module for pretty icons in various plugins.
   if vim.g.have_nerd_font then
@@ -730,16 +729,12 @@ do
   -- Automatically install LSPs and related tools to stdpath for Neovim
   require('mason').setup {}
 
-  -- Ensure the servers and tools above are installed
-  --
-  -- To check the current status of installed tools and/or manually install
-  -- other tools, you can run
-  --    :Mason
-  --
-  -- You can press `g?` for help in this menu.
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
-    -- You can add other tools here that you want Mason to install
+    'markdownlint',
+    'eslint_d',
+    'typescript-language-server',
+    'lua-language-server'
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
