@@ -28,16 +28,14 @@ vim.keymap.set('n', '<leader><S-h>', '<C-w>H', { desc = 'Move window left[h]' })
 vim.keymap.set('n', '<leader><S-l>', '<C-w>L', { desc = 'Move window right[l]' })
 vim.keymap.set('n', '<leader>z', '<S-z><S-z>', { desc = 'Write and Quit' })
 
+-- Tabs
+vim.keymap.set('n', '<A-[>', 'gT', { desc = 'Previous tab' })
+vim.keymap.set('n', '<A-]>', 'gt', { desc = 'Next tab' })
+
 -- Open specific file
 vim.keymap.set('n', '<F1>', '<Cmd>sp ~/Notes/comp_sci/nvim_todo.md<CR>', { desc = 'TODO Split' })
 vim.keymap.set('n', '<F2>', '<Cmd>sp ~/.config/nvim/init.lua<CR>', { desc = 'init.lua Split' })
 vim.keymap.set('n', '<F3>', '<Cmd>sp ~/.config/nvim/lua/oliver/keymaps.lua<CR>', { desc = 'Keymap Split' })
-
--- Resize window
-vim.keymap.set('n', '-', '<C-w><S-->', { desc = 'Decrease window height' })
-vim.keymap.set('n', '+', '<C-w><S-+>', { desc = 'Increase window height' })
-vim.keymap.set('n', '<', '<Cmd>vert res -5<CR>', { desc = 'Decrease window width' })
-vim.keymap.set('n', '>', '<Cmd>vert res +5<CR>', { desc = 'Increase window width' })
 
 -- Terminal
 vim.keymap.set('n', '<A-i>', '<Cmd>term<CR>a', { desc = 'Open CL[I]'})

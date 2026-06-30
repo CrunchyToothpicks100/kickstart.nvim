@@ -373,10 +373,6 @@ do
   --  A collection of various small independent plugins/modules
   vim.pack.add { gh 'nvim-mini/mini.nvim' }
 
-  -- Load the colorscheme here. miniwinter ships with mini.nvim and requires
-  -- mini.hues, so this must come after mini.nvim is loaded above.
-  vim.cmd.colorscheme 'miniwinter'
-
   -- If a nerd font is available, load the icons module for pretty icons in various plugins.
   if vim.g.have_nerd_font then
     require('mini.icons').setup()
