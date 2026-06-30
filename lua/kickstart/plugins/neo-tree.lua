@@ -19,11 +19,11 @@ require('neo-tree').setup {
     },
     filesystem = {
       filtered_items = {
-          visible = true, -- Shows hidden files (e.g., .env, .gitignore)
-        },
-        follow_current_file = {
-          enabled = true, -- Automatically focuses current file in tree
-        },
-    }
+        visible = true, -- Shows hidden files (e.g., .env, .gitignore)
+      },
+      follow_current_file = {
+        enabled = true, -- Automatically focuses current file in tree
+      },
+    },
   },
 }

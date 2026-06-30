@@ -942,7 +942,7 @@ do
   require 'kickstart.plugins.lint'
   require 'kickstart.plugins.autopairs'
   require 'kickstart.plugins.neo-tree'
-  -- require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
+  require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
 
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
@@ -954,10 +954,9 @@ end
 -- SECTION 11: Stuff that I Added
 -- ============================================================
 do
-  require 'oliver.keymaps'
-  require 'oliver.options'
-  require 'oliver.commands'
-
+  require 'keymaps'
+  require 'commands'
+  require 'options'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
