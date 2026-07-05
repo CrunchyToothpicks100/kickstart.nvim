@@ -5,6 +5,8 @@ local builtin = require 'telescope.builtin'
 -- Basic
 vim.keymap.set('n', '<C-q>', '<C-v>', { desc = 'Visual Block Mode' })
 vim.keymap.set('n', '<leader>z', '<S-z><S-z>', { desc = 'Write buffer and close window' })
+vim.keymap.set('n', '<A-[>', 'gT', { desc = 'tab left' })
+vim.keymap.set('n', '<A-]>', 'gt', { desc = 'tab right' })
 
 -- Source files
 vim.keymap.set('n', '<A-s>', '<Cmd>source %<CR>', { desc = 'Source current file' })
@@ -15,7 +17,7 @@ vim.keymap.set('n', '<leader>d', '<Cmd>:cd %:p:h<CR>', { desc = 'Set current dir
 -- Open specific file (painfully lazy)
 vim.keymap.set('n', '<F1>', '<Cmd>sp ~/.config/nvim/todo.md<CR>', { desc = 'TODO Split' })
 vim.keymap.set('n', '<F2>', '<Cmd>sp ~/.config/nvim/init.lua<CR>', { desc = 'init.lua Split' })
-vim.keymap.set('n', '<F3>', '<Cmd>sp ~/.config/nvim/lua/oliver/keymaps.lua<CR>', { desc = 'Keymap Split' })
+vim.keymap.set('n', '<F3>', '<Cmd>sp ~/.config/nvim/lua/keymaps.lua<CR>', { desc = 'Keymap Split' })
 
 -- Terminal
 vim.keymap.set('n', '<A-i>', '<Cmd>tabnew | term<CR>a', { desc = 'Open CL[I]' })
