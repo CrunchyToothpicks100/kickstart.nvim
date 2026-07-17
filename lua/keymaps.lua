@@ -41,6 +41,10 @@ vim.keymap.set('n', '<leader>td', function()
     vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, { desc = '[T]oggle [D]iagnostics' })
 
+-- Peek.nvim
+vim.keymap.set('n', '<leader>po', '<Cmd>PeekOpen<CR>', { desc = 'Open markdown preview' })
+vim.keymap.set('n', '<leader>pc', '<Cmd>PeekClose<CR>', { desc = 'Close markdown preview' })
+
 -- ================
 -- INSERT MODE
 -- ================

@@ -293,6 +293,15 @@ do
         return
       end
 
+      if name == 'peek.nvim' then
+        if vim.fn.executable 'deno' == 1 then
+          run_build(name, { 'deno', 'task', '--quiet', 'build:fast' }, ev.data.path)
+        else
+          vim.notify('peek.nvim requires Deno to build its web assets', vim.log.levels.WARN)
+        end
+        return
+      end
+
       if name == 'nvim-treesitter' then
         if not ev.data.active then vim.cmd.packadd 'nvim-treesitter' end
         vim.cmd 'TSUpdate'

@@ -16,5 +16,3 @@ Learn more
 - lazy.nvim vs vim.pack, key differences  
 - plugins.lua file  
 - Move any keymaps, options, plugins, or commands to my subfolders  
-
-Markdown preview (peek.nvim)
