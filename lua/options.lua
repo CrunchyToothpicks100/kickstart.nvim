@@ -10,11 +10,20 @@ vim.o.undodir = vim.fn.expand('~/.config/nvim/undofiles')
 
 vim.o.backupcopy = 'yes'
 
-vim.cmd.colorscheme('minicyan')
+vim.cmd.colorscheme('tokyonight-night')
 
-vim.o.background = 'light'
+-- vim.o.background = 'light'
 
--- ========================================
--- COPIED FROM KICKSTART'S INIT.LUA
--- ========================================
+-- Don't auto-continue comments
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = '*',
+    callback = function()
+        vim.opt_local.formatoptions:remove({ 'o', 'r' })
+    end,
+})
+
+-- Turn off list option for terminals
+vim.api.nvim_create_autocmd('TermOpen', {
+  callback = function() vim.wo.list = false end,
+})
 

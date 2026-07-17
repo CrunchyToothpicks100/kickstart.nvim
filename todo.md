@@ -1,9 +1,5 @@
 # TODO
 
-Crawl through tree-sitter (what does it actually do?)
-
-Find commands for 'go-to reference' or 'go-to implementation'
-
 Autocomplete
 
 - keymap for completion  

@@ -193,9 +193,17 @@ do
     float = { border = 'rounded', source = 'if_many' },
     underline = { severity = { min = vim.diagnostic.severity.WARN } },
 
-    -- Can switch between these as you prefer
-    virtual_text = true, -- Text shows up at the end of the line
-    virtual_lines = false, -- Text shows up underneath the line, with virtual lines
+    -- Keep diagnostics inline, but truncate so they do not run off-screen.
+    virtual_text = {
+      spacing = 2,
+      source = 'if_many',
+      format = function(diagnostic)
+        local message = diagnostic.message:gsub('\n', ' ')
+        if #message > 80 then return message:sub(1, 77) .. '...' end
+        return message
+      end,
+    },
+    virtual_lines = false,
 
     -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
     jump = {
@@ -395,6 +403,14 @@ do
     n_lines = 500,
   }
 
+  -- Keep mini.ai available normally, but disable it while in blockwise Visual mode
+  -- so Vim's built-in block editing keys keep working.
+  vim.api.nvim_create_autocmd({ 'ModeChanged', 'BufEnter' }, {
+    callback = function()
+      vim.b.miniai_disable = vim.fn.mode(1) == '\22'
+    end,
+  })
+
   -- Add/delete/replace surroundings (brackets, quotes, etc.)
   --
   -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
@@ -463,15 +479,15 @@ do
   require('telescope').setup {
     -- You can put your default mappings / updates / etc. in here
     --  All the info you're looking for is in `:help telescope.setup()`
-    --
-    -- defaults = {
-    --   mappings = {
-    --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-    --   },
-    -- },
+    defaults = {
+      -- Close on <Esc> instead of dropping into the prompt's normal mode
+      mappings = {
+        i = { ['<esc>'] = require('telescope.actions').close },
+      },
+    },
     pickers = {
-      buffers = { initial_mode = 'normal' },
-      oldfiles = { initial_mode = 'normal' },
+      buffers = { initial_mode = 'insert' },
+      oldfiles = { initial_mode = 'insert' },
     },
     extensions = {
       ['ui-select'] = { require('telescope.themes').get_dropdown() },
@@ -675,8 +691,9 @@ do
     -- Some languages (like typescript) have entire language plugins that can be useful:
     --    https://github.com/pmizio/typescript-tools.nvim
     --
-    -- But for many setups, the LSP (`ts_ls`) will work just fine
-    ts_ls = {},
+    ts_ls = {
+      filetypes = { 'typescript', 'typescriptreact' },
+    },
 
     stylua = {}, -- Used to format Lua code
 
@@ -733,8 +750,11 @@ do
   vim.list_extend(ensure_installed, {
     'markdownlint',
     'eslint_d',
+    'oxlint',
+    'prettierd',
+    'shellcheck',
     'typescript-language-server',
-    'lua-language-server'
+    'lua-language-server',
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -754,29 +774,18 @@ do
   vim.pack.add { gh 'stevearc/conform.nvim' }
   require('conform').setup {
     notify_on_error = false,
-    format_on_save = function(bufnr)
-      -- You can specify filetypes to autoformat on save here:
-      local enabled_filetypes = {
-        -- lua = true,
-        -- python = true,
-      }
-      if enabled_filetypes[vim.bo[bufnr].filetype] then
-        return { timeout_ms = 500 }
-      else
-        return nil
-      end
-    end,
+    -- Format manually with <leader>f only.
+    format_on_save = nil,
     default_format_opts = {
       lsp_format = 'fallback', -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
-      -- rust = { 'rustfmt' },
-      -- Conform can also run multiple formatters sequentially
-      -- python = { "isort", "black" },
-      --
-      -- You can use 'stop_after_first' to run the first available formatter from the list
-      -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      python = { 'ruff_format' },
+      javascript = { 'prettierd', 'prettier', stop_after_first = true },
+      javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+      typescript = { 'prettierd', 'prettier', stop_after_first = true },
+      typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
     },
   }
 
@@ -810,7 +819,7 @@ do
       --   <c-y> to accept ([y]es) the completion.
       --    This will auto-import if your LSP supports it.
       --    This will expand snippets if the LSP sent a snippet.
-      -- 'super-tab' for tab to accept
+      -- 'super-tab' for Tab to accept/select-and-accept completion
       -- 'enter' for enter to accept
       -- 'none' for no mappings
       --
@@ -827,7 +836,7 @@ do
       -- <c-k>: Toggle signature help
       --
       -- See `:help blink-cmp-config-keymap` for defining your own keymap
-      preset = 'default',
+      preset = 'super-tab',
 
       -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
       --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -858,10 +867,10 @@ do
     -- the rust implementation via `'prefer_rust_with_warning'`
     --
     -- See `:help blink-cmp-config-fuzzy` for more information
-    fuzzy = { implementation = 'lua' },
+    fuzzy = { implementation = 'prefer_rust_with_warning' },
 
     -- Shows a signature help window while you type arguments for a function
-    signature = { enabled = true },
+    signature = { enabled = false },
   }
 end
 
@@ -941,17 +950,11 @@ do
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug'
-  -- require 'kickstart.plugins.indent_line'
-  require 'kickstart.plugins.lint'
-  require 'kickstart.plugins.autopairs'
-  require 'kickstart.plugins.neo-tree'
-  require 'kickstart.plugins.gitsigns' -- adds gitsigns recommended keymaps
-
-  -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  require 'custom.plugins'
+  -- All plugins now live together in `lua/plugins/*.lua` (debug, indent_line, lint,
+  -- autopairs, neo-tree, gitsigns, plus anything else you add) and are auto-loaded
+  -- by the directory scan in `lua/plugins/init.lua`. Drop a `.lua` file in there to
+  -- enable it; delete it to disable it.
+  require 'plugins'
 end
 
 -- ============================================================
