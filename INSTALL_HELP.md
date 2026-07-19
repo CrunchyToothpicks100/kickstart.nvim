@@ -49,7 +49,6 @@ sudo rm -rf tree-sitter
 sudo gunzip tree-sitter-linux-x64.gz
 sudo mv tree-sitter-linux-x64 tree-sitter
 sudo chmod +x tree-sitter
-sudo rm -rf tree-sitter-cli-linux-x64.gz
 ```
 
 Add to bashrc: `PATH="$PATH:/usr/local/bin/tree-sitter"`
