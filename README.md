@@ -12,6 +12,8 @@ A starting point for Neovim that is:
 
 ## Installation
 
+This fork has some extra dependencies. See INSTALL_HELP.md
+
 ### Install Neovim
 
 Kickstart.nvim targets *only* the latest
@@ -25,17 +27,6 @@ below the latest
 ['stable'](https://github.com/neovim/neovim/releases/tag/stable) version. If
 your chosen install method only gives you an outdated version of neovim, find
 alternative [installation methods below](#alternative-neovim-installation-methods).
-
-### My Own Dependencies
-
-* nvm
-* npm
-* build-essentials
-* unzip
-* nerd font (install from explorer, do `Ctrl+,` and edit JSON)
-* Deno for `peek.nvim`'s web assets
-* `xdg-utils` with `xdg-open` configured to open Chrome in WSL for `peek.nvim`
-* Helpful alias for looking at nvim plugins `alias vpdir='cd ~/.local/share/nvim/site/pack/core/opt'`
 
 ### Install External Dependencies
 
