@@ -415,9 +415,7 @@ do
   -- Keep mini.ai available normally, but disable it while in blockwise Visual mode
   -- so Vim's built-in block editing keys keep working.
   vim.api.nvim_create_autocmd({ 'ModeChanged', 'BufEnter' }, {
-    callback = function()
-      vim.b.miniai_disable = vim.fn.mode(1) == '\22'
-    end,
+    callback = function() vim.b.miniai_disable = vim.fn.mode(1) == '\22' end,
   })
 
   -- Add/delete/replace surroundings (brackets, quotes, etc.)
@@ -581,7 +579,6 @@ do
   -- Shortcut for searching your Neovim configuration files
   vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config', follow = true } end, { desc = '[S]earch [N]eovim files' })
   vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
-
 end
 
 -- ============================================================
@@ -700,11 +697,6 @@ do
     -- Some languages (like typescript) have entire language plugins that can be useful:
     --    https://github.com/pmizio/typescript-tools.nvim
     --
-    ts_ls = {
-      filetypes = { 'typescript', 'typescriptreact' },
-    },
-
-    stylua = {}, -- Used to format Lua code
 
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
@@ -743,6 +735,32 @@ do
         },
       },
     },
+
+    ts_ls = {
+      filetypes = { 'typescript', 'typescriptreact' },
+    },
+
+    ty = {},
+
+    -- Set up astro LSP and path for typescript lsp
+    astro = {
+      init_options = {
+        typescript = {
+          tsdk = vim.fs.joinpath(vim.fn.stdpath 'data', 'mason', 'packages', 'typescript-language-server', 'node_modules', 'typescript', 'lib'),
+        },
+      },
+    },
+
+    biome = {
+      filetypes = {
+        'javascript',
+        'javascriptreact',
+        'json',
+        'jsonc',
+        'typescript',
+        'typescriptreact',
+      },
+    },
   }
 
   vim.pack.add {
@@ -757,13 +775,17 @@ do
 
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
-    'markdownlint',
-    'eslint_d',
-    'oxlint',
-    'prettierd',
-    'shellcheck',
-    'typescript-language-server',
-    'lua-language-server',
+    'markdownlint', -- Markdown
+    'shellcheck', -- Bash
+    'lua-language-server', -- Lua LSP
+    'stylua', -- Lua formatting
+    'astro-language-server', -- Astro
+    'typescript-language-server', -- TS
+    'biome', -- JS/JSX/TS/TSX
+    'eslint_d', -- JS/JSX/TS/TSX
+    'oxlint', -- JS/JSX/TS/TSX
+    'prettierd', -- JS/JSX/TS/TSX
+    'prettier', -- JS/JSX/TS/TSX
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -783,18 +805,23 @@ do
   vim.pack.add { gh 'stevearc/conform.nvim' }
   require('conform').setup {
     notify_on_error = false,
-    -- Format manually with <leader>f only.
-    format_on_save = nil,
+    format_on_save = {
+      timeout_ms = 500,
+    },
     default_format_opts = {
-      lsp_format = 'fallback', -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
+      lsp_format = 'never',
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
+      lua = { 'stylua' },
       python = { 'ruff_format' },
-      javascript = { 'prettierd', 'prettier', stop_after_first = true },
-      javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
-      typescript = { 'prettierd', 'prettier', stop_after_first = true },
-      typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+      javascript = { 'biome' },
+      javascriptreact = { 'biome' },
+      typescript = { 'biome' },
+      typescriptreact = { 'biome' },
+      json = { 'biome' },
+      jsonc = { 'biome' },
+      astro = { 'prettierd', 'prettier', stop_after_first = true },
     },
   }
 
@@ -918,7 +945,7 @@ do
     local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
 
     -- Enable treesitter based indentation
-    if has_indent_query then vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
+    -- if has_indent_query then vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
   end
 
   local available_parsers = require('nvim-treesitter').get_available()
