@@ -4,17 +4,9 @@ vim.pack.add { 'https://github.com/mfussenegger/nvim-lint' }
 
 local lint = require 'lint'
 lint.linters_by_ft = {
-  -- Run Oxlint and ESLint alongside the Biome LSP for web files.
-  javascript = { 'oxlint', 'eslint_d' },
-  javascriptreact = { 'oxlint', 'eslint_d' },
-  json = { 'eslint_d' },
-  jsonc = { 'eslint_d' },
   markdown = { 'markdownlint' },
-  python = { 'ruff', 'mypy' },
-  astro = { 'eslint_d', 'oxlint' },
+  python = { 'ruff' },
   sh = { 'shellcheck' },
-  typescript = { 'oxlint', 'eslint_d' },
-  typescriptreact = { 'oxlint', 'eslint_d' },
 }
 
 -- Follow sourced files (e.g. `source ./lib.sh`) instead of warning SC1091
