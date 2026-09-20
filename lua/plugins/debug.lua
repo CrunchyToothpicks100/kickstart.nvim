@@ -17,10 +17,11 @@ vim.pack.add {
 vim.cmd.packadd 'nvim-nio'
 
 -- Basic debugging keymaps, feel free to change to your liking!
-vim.keymap.set('n', '<F5>', function() require('dap').continue() end, { desc = 'Debug: Start/Continue' })
 vim.keymap.set('n', '<F1>', function() require('dap').step_into() end, { desc = 'Debug: Step Into' })
 vim.keymap.set('n', '<F2>', function() require('dap').step_over() end, { desc = 'Debug: Step Over' })
 vim.keymap.set('n', '<F3>', function() require('dap').step_out() end, { desc = 'Debug: Step Out' })
+vim.keymap.set('n', '<F5>', function() require('dap').continue() end, { desc = 'Debug: Start/Continue' })
+vim.keymap.set('n', '<F6>', function() require('dap').terminate() end, { desc = 'Debug: Terminate' })
 vim.keymap.set('n', '<leader>b', function() require('dap').toggle_breakpoint() end, { desc = 'Debug: Toggle Breakpoint' })
 vim.keymap.set('n', '<leader>B', function() require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ') end, { desc = 'Debug: Set Breakpoint' })
 -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
@@ -42,9 +43,53 @@ require('mason-nvim-dap').setup {
   -- online, please don't ask me how to install them :)
   ensure_installed = {
     -- Update this to ensure that you have the debuggers for the langs you want
+    'js',
     'delve',
   },
 }
+
+dap.adapters['pwa-node'] = {
+  type = 'server',
+  host = 'localhost',
+  port = '${port}',
+  executable = {
+    command = 'js-debug-adapter',
+    args = { '${port}' },
+  },
+}
+
+dap.configurations.javascript = {
+  {
+    type = 'pwa-node',
+    request = 'launch',
+    name = 'Launch current file',
+    program = '${file}',
+    cwd = '${workspaceFolder}',
+    console = 'integratedTerminal',
+  },
+}
+
+-- C and C++: use the system GDB (version 14+ provides the DAP interface).
+-- Build a debug executable first, e.g.:
+--   cmake -S . -B build/debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++
+--   cmake --build build/debug
+dap.adapters.gdb = {
+  type = 'executable',
+  command = 'gdb',
+  args = { '-i', 'dap' },
+}
+
+dap.configurations.cpp = {
+  {
+    name = 'Launch CMake executable',
+    type = 'gdb',
+    request = 'launch',
+    program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/build/debug/helloworld', 'file') end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+  },
+}
+dap.configurations.c = dap.configurations.cpp
 
 -- Dap UI setup
 -- For more information, see |:help nvim-dap-ui|
@@ -68,19 +113,39 @@ dapui.setup {
       disconnect = '⏏',
     },
   },
+  layouts = {
+    {
+      position = 'left',
+      size = 20, -- sidebar width, in columns
+      elements = {
+        { id = 'scopes', size = 0.40 },
+        { id = 'stacks', size = 0.25 },
+        { id = 'watches', size = 0.20 },
+        { id = 'breakpoints', size = 0.15 },
+      },
+    },
+    {
+      position = 'bottom',
+      size = 4, -- bottom panel height, in rows
+      elements = {
+        { id = 'repl', size = 0.60 },
+        { id = 'console', size = 0.40 },
+      },
+    },
+  },
 }
 
 -- Change breakpoint icons
--- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
--- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
--- local breakpoint_icons = vim.g.have_nerd_font
---     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
---   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
--- for type, icon in pairs(breakpoint_icons) do
---   local tp = 'Dap' .. type
---   local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
---   vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
--- end
+vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+local breakpoint_icons = vim.g.have_nerd_font
+    and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
+  or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
+for type, icon in pairs(breakpoint_icons) do
+  local tp = 'Dap' .. type
+  local hl = (type == 'Stopped') and 'DapStop' or 'DapBreak'
+  vim.fn.sign_define(tp, { text = icon, texthl = hl, numhl = hl })
+end
 
 dap.listeners.after.event_initialized['dapui_config'] = dapui.open
 dap.listeners.before.event_terminated['dapui_config'] = dapui.close
