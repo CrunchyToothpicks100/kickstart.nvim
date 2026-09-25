@@ -1,14 +1,11 @@
 -- debug.lua
 --
 -- Shows how to use the DAP plugin to debug your code.
---
--- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
 
 vim.pack.add {
   'https://github.com/mfussenegger/nvim-dap',
   'https://github.com/rcarriga/nvim-dap-ui',
+  'https://github.com/theHamsta/nvim-dap-virtual-text',
   'https://github.com/nvim-neotest/nvim-nio',
   'https://github.com/mason-org/mason.nvim',
   'https://github.com/jay-babu/mason-nvim-dap.nvim',
@@ -29,6 +26,13 @@ vim.keymap.set('n', '<F7>', function() require('dapui').toggle() end, { desc = '
 
 local dap = require 'dap'
 local dapui = require 'dapui'
+local cmake_runner = require 'cmake_runner'
+
+-- Show the current values of local variables beside their definitions while paused.
+require('nvim-dap-virtual-text').setup {
+  virt_text_pos = 'inline',
+  highlight_changed_variables = true,
+}
 
 require('mason-nvim-dap').setup {
   -- Makes a best effort to setup the various debuggers with
@@ -70,9 +74,7 @@ dap.configurations.javascript = {
 }
 
 -- C and C++: use the system GDB (version 14+ provides the DAP interface).
--- Build a debug executable first, e.g.:
---   cmake -S . -B build/debug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++
---   cmake --build build/debug
+-- Build a debug executable first with the CMake runner.
 dap.adapters.gdb = {
   type = 'executable',
   command = 'gdb',
@@ -84,7 +86,15 @@ dap.configurations.cpp = {
     name = 'Launch CMake executable',
     type = 'gdb',
     request = 'launch',
-    program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/build/debug/helloworld', 'file') end,
+    program = function()
+      local project = cmake_runner.get_project()
+      if not project then return nil end
+
+      local default = project.debug_dir
+      if project.default_target then default = vim.fs.joinpath(project.debug_dir, project.default_target) end
+
+      return vim.fn.input('Path to executable: ', default, 'file')
+    end,
     cwd = '${workspaceFolder}',
     stopOnEntry = false,
   },
@@ -118,7 +128,7 @@ dapui.setup {
       position = 'left',
       size = 20, -- sidebar width, in columns
       elements = {
-        { id = 'scopes', size = 0.40 },
+        { id = 'repl', size = 0.40 },
         { id = 'stacks', size = 0.25 },
         { id = 'watches', size = 0.20 },
         { id = 'breakpoints', size = 0.15 },
@@ -126,9 +136,9 @@ dapui.setup {
     },
     {
       position = 'bottom',
-      size = 4, -- bottom panel height, in rows
+      size = 6, -- bottom panel height, in rows
       elements = {
-        { id = 'repl', size = 0.60 },
+        { id = 'scopes', size = 0.60 },
         { id = 'console', size = 0.40 },
       },
     },

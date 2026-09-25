@@ -90,18 +90,21 @@ local function open_terminal(command)
   vim.cmd 'startinsert'
 end
 
---- Gets project info
-local function project()
+--- Gets project info for the current buffer.
+---
+--- This is public so other integrations (such as DAP) can share the same
+--- project-root discovery and .nvim/cmake.json handling.
+function M.get_project()
   local root = project_root()
-  if not root then return nil end
+  if not root then return nil end --- Could not find CMakeLists.txt to determine root
 
   local config = read_config(root)
-  if not config then return nil end
+  if not config then return nil end --- JSON un-parseable
 
   return {
     root = root,
-    debug_dir = path_from_config(root, config.debug_build_dir, root .. '/build/debug'),
-    release_dir = path_from_config(root, config.release_build_dir, root .. '/build/release'),
+    debug_dir = path_from_config(root, config.debug_build_dir, root .. '/build'),
+    release_dir = path_from_config(root, config.release_build_dir, nil),
     debug_args = configure_args(config, 'debug_configure_args'),
     release_args = configure_args(config, 'release_configure_args'),
     default_target = config.default_target
@@ -135,17 +138,18 @@ end
 
 function M.setup()
   vim.keymap.set('n', '<leader>cm', function()
-    local current = project()
-    if not current then return end
+    local current = M.get_project()
+    if not current then return end -- no root or bad JSON
 
-    local debug = configure_command(current.root, current.debug_dir, 'Debug', current.debug_args)
-    local release =
-      configure_command(current.root, current.release_dir, 'Release', current.release_args)
-    open_terminal(debug .. ' && ' .. release)
-  end, { desc = 'CMake: [M]ake Debug and Release config' })
+    local full_command = configure_command(current.root, current.debug_dir, 'Debug', current.debug_args)
+    if current.release_dir then
+      full_command = full_command .. ' && ' .. configure_command(current.root, current.release_dir, 'Release', current.release_args)
+    end
+    open_terminal(full_command)
+  end, { desc = 'CMake: [M]ake Debug and/or Release config' })
 
   vim.keymap.set('n', '<leader>cr', function()
-    local current = project()
+    local current = M.get_project()
     if not current then return end
 
     local target = prompt_target()
@@ -163,7 +167,7 @@ function M.setup()
   end, { desc = 'CMake: Build Debug target and [R]un' })
 
   vim.keymap.set('n', '<leader>cb', function()
-    local current = project()
+    local current = M.get_project()
     if not current then return end
 
     local target = prompt_target()
@@ -175,9 +179,11 @@ function M.setup()
       target = current.default_target
     end
 
-    local debug = build_command(current.debug_dir, target)
-    local release = build_command(current.release_dir, target)
-    open_terminal(debug .. ' && ' .. release)
+    local full_command = build_command(current.debug_dir, target)
+    if current.release_dir then
+      full_command = full_command .. ' && ' .. build_command(current.release_dir, target)
+    end
+    open_terminal(full_command)
   end, { desc = 'CMake: [B]uild target in Debug and Release' })
 end
 

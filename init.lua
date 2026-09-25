@@ -1002,7 +1002,7 @@ do
 end
 
 -- ============================================================
--- SECTION 10: Stuff that I Added
+-- SECTION 10: Imports
 -- ============================================================
 do
   -- Enable true-color support for plugins such as nvim-colorizer
