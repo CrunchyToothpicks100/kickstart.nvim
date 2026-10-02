@@ -8,18 +8,17 @@ git config --global user.email "your_email@example.com"
 git config --global user.name "your_name"
 ```
 
-## Neovim itself (from curl)
+## Latest Neovim (from curl)
 
 ```bash
 cd /opt
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-sudo rm -rf nvim-linux
+sudo rm -rf nvim
 sudo tar -xzf nvim-linux-x86_64.tar.gz
 sudo mv nvim-linux-x86_64.tar.gz nvim
-sudo rm -rf ~/nvim-linux-x86_64.tar.gz
+sudo rm -rf nvim-linux-x86_64.tar.gz
+echo 'PATH="$PATH:/opt/nvim/bin"' >> ~/.bashrc
 ```
-
-Add to bashrc: `PATH="$PATH:/opt/nvim/bin"`
 
 ## npm & nvm
 
@@ -28,10 +27,10 @@ sudo apt install nvm -y
 nvm install --lts
 ```
 
-## Build-essentials (apt)
+## Build-essential (apt)
 
 ```bash
-sudo apt install build-essentials -y
+sudo apt install build-essential -y
 ```
 
 ## Unzip (apt)
@@ -40,22 +39,32 @@ sudo apt install build-essentials -y
 sudo apt install unzip -y
 ```
 
+## cargo and rustup
+
+```bash
+curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+echo 'PATH="$HOME/.cargo/bin/"' >> ~/.bashrc
+```
+
 ## Tree-sitter-cli
 
 ```bash
-cd /usr/local/bin
-sudo curl -LO https://github.com/tree-sitter/tree-sitter/releases/download/v0.26.11/tree-sitter-linux-x64.gz
-sudo rm -rf tree-sitter
-sudo gunzip tree-sitter-linux-x64.gz
-sudo mv tree-sitter-linux-x64 tree-sitter
-sudo chmod +x tree-sitter
+cargo install tree-sitter-cli -y
 ```
-
-Add to bashrc: `PATH="$PATH:/usr/local/bin/tree-sitter"`
 
 ## Nerd font
 
-Install from explorer, do `Ctrl+,` and edit JSON
+Linux:
+
+(Install the font to $HOME first, JetBrainsMono used in example)
+
+```bash
+mkdir -p ~/.local/share/fonts
+unzip JetBrainsMono.zip -d ~/.local/share/fonts/
+fc-cache -fv
+```
+
+WSL: Download, Install from explorer, do `Ctrl+,` and edit JSON
 
 ## Deno
 
@@ -65,7 +74,7 @@ Deno for `peek.nvim`'s web assets
 curl -fsSL https://deno.land/install.sh | sh
 ```
 
-## wslu
+## wslu (for WSL)
 
 `wslu` with `xdg-open` configured to open Chrome in WSL for `peek.nvim`
 
