@@ -18,6 +18,21 @@ vim.keymap.set('n', '<leader>x', '_f<Space>x', { desc = 'Delete first space in l
 vim.keymap.set('n', '<leader>X', '$F<Space>x', { desc = 'Delete last space in line' })
 vim.keymap.set('n', '<leader>ht', 'saa>}saa>/saa>*saa><Space>', { remap = true, desc = 'Comment HTML tag' })
 
+-- C++
+vim.keymap.set('n', '<leader>cg', function()
+  vim.cmd('update')
+  local source = vim.fn.expand('%:p')
+  local output = vim.fn.expand('%:p:r')
+  local command = string.format(
+    'g++ %s -o %s && %s',
+    vim.fn.shellescape(source),
+    vim.fn.shellescape(output),
+    vim.fn.shellescape(output)
+  )
+  vim.cmd('belowright split | terminal ' .. command)
+  vim.cmd('startinsert')
+end, { desc = '[G]++ build and run current file' })
+
 -- Source files
 vim.keymap.set('n', '<A-s>', '<Cmd>source %<CR>', { desc = 'Source current lua file' })
 
