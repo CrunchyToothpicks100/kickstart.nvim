@@ -804,6 +804,11 @@ end
 do
   -- [[ Formatting ]]
   vim.pack.add { gh 'stevearc/conform.nvim' }
+  local function clang_format_for_buffer(bufnr)
+    if vim.b[bufnr].disable_clang_format then return {} end
+    return { 'clang-format' }
+  end
+
   require('conform').setup {
     notify_on_error = false,
     format_on_save = {
@@ -815,8 +820,8 @@ do
     -- You can also specify external formatters in here.
     formatters_by_ft = {
       lua = { 'stylua' },
-      c = { 'clang-format' },
-      cpp = { 'clang-format' },
+      c = clang_format_for_buffer,
+      cpp = clang_format_for_buffer,
       python = { 'ruff_format' },
       javascript = { 'biome' },
       javascriptreact = { 'biome' },
@@ -841,6 +846,18 @@ do
     function() require('conform').format { async = true } end,
     { desc = '[F]ormat buffer' }
   )
+
+  vim.keymap.set('n', '<leader>tf', function()
+    local filetype = vim.bo.filetype
+    if filetype ~= 'c' and filetype ~= 'cpp' then
+      vim.notify('clang-format toggle only applies to C/C++ buffers')
+      return
+    end
+
+    vim.b.disable_clang_format = not vim.b.disable_clang_format
+    local state = vim.b.disable_clang_format and 'disabled' or 'enabled'
+    vim.notify('clang-format ' .. state .. ' for this buffer')
+  end, { desc = 'Toggle clang-format for buffer' })
 end
 
 -- ============================================================
