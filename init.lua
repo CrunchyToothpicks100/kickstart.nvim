@@ -713,6 +713,7 @@ do
         '--clang-tidy', -- Enable static analysis
         '--header-insertion=iwyu', -- #include injection, can set to 'never'
         '--completion-style=detailed',
+        '--experimental-modules-support',
       },
     },
 
