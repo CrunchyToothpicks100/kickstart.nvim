@@ -12,6 +12,9 @@ lint.linters_by_ft = {
 -- Follow sourced files (e.g. `source ./lib.sh`) instead of warning SC1091
 table.insert(lint.linters.shellcheck.args, '-x')
 
+-- Disable Markdown line-length warnings (MD013).
+vim.list_extend(lint.linters.markdownlint.args, { '--disable', 'MD013' })
+
 -- Create autocommand which carries out the actual linting
 -- on the specified events.
 local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
