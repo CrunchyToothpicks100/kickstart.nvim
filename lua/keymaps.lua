@@ -9,8 +9,8 @@ vim.keymap.set('n', '<A-[>', 'gT', { desc = 'tab left' })
 vim.keymap.set('n', '<A-]>', 'gt', { desc = 'tab right' })
 vim.keymap.set('n', '<leader>r', '<Cmd>e!<CR>', { desc = 'Refresh editor' })
 vim.keymap.set('n', '<leader>w', '070lf<Space>xi<CR><Esc>', { desc = 'Hard Wrap' })
-vim.keymap.set('n', '<leader>oj', 'o<Esc>', { desc = 'New line below' })
-vim.keymap.set('n', '<leader>ok', 'O<Esc>', { desc = 'New line above' })
+vim.keymap.set('n', 'ste', 'vesa\"', { remap = true, desc = 'Stringify word' })
+vim.keymap.set('n', 'stE', 'vEsa\"', { remap = true, desc = 'Stringify whole word' })
 
 -- Web Dev
 vim.keymap.set('n', '<leader>hs', '_f>a<CR><Esc>$F<i<CR><Esc>k', { desc = 'split HTML tags' })
