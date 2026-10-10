@@ -1,29 +1,38 @@
 # Install help
 
-## Git
+Update first: `sudo apt update`
+
+## Clone the repository
 
 ```bash
 sudo apt install git -y
-git config --global user.email "your_email@example.com"
-git config --global user.name "your_name"
+cd ~/.config
+git clone https://github.com/CrunchyToothpicks100/kickstart.nvim
+mv kickstart.nvim/ nvim/
+```
+
+## Curl
+
+```bash
+sudo apt install curl -y
 ```
 
 ## Latest Neovim (from curl)
 
 ```bash
-cd /opt
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-sudo rm -rf nvim
-sudo tar -xzf nvim-linux-x86_64.tar.gz
-sudo mv nvim-linux-x86_64.tar.gz nvim
-sudo rm -rf nvim-linux-x86_64.tar.gz
+sudo curl -LO -o /opt/nvim.tar.gz https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo rm -rf /opt/nvim
+sudo tar -xzf /opt/nvim.tar.gz
+sudo mv /opt/nvim-linux-x86_64 /opt/nvim
+sudo rm -rf /opt/nvim.tar.gz
 echo 'PATH="$PATH:/opt/nvim/bin"' >> ~/.bashrc
 ```
 
 ## npm & nvm
 
 ```bash
-sudo apt install nvm -y
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash
+source ~/.bashrc
 nvm install --lts
 ```
 
@@ -54,24 +63,21 @@ cargo install tree-sitter-cli -y
 
 ## Nerd font
 
-Linux:
-
-(Install the font to $HOME first, JetBrainsMono used in example)
+Linux - This will install JetBrainsMono, you can edit this file
 
 ```bash
-mkdir -p ~/.local/share/fonts
-unzip JetBrainsMono.zip -d ~/.local/share/fonts/
-fc-cache -fv
+./install-nerd.sh
 ```
 
-WSL: Download, Install from explorer, do `Ctrl+,` and edit JSON
+WSL or Windows - Download, Install from explorer, do `Ctrl+,` and edit JSON
+to set the terminal profile's font manually
 
-## Deno
+## Wayland Clipboard (for copy-pasting)
 
-Deno for `peek.nvim`'s web assets
+See if you are using Wayland or X11 with `echo $XDG_SESSION_TYPE`
 
 ```bash
-curl -fsSL https://deno.land/install.sh | sh
+sudo apt install wl-clipboard
 ```
 
 ## wslu (for WSL)
@@ -91,3 +97,31 @@ For looking at plugins `alias vpdir='cd ~/.local/share/nvim/site/pack/core/opt'`
 ```bash
 echo "alias vpdir=\"cd ~/.local/share/nvim/site/pack/core/opt\"" >> ~/.bash_aliases
 ```
+
+## Deno for peek.nvim
+
+Peek.nvim is a useful viewing tool for markdown files, however you will
+need deno to build it
+
+```bash
+curl -fsSL https://deno.land/install.sh | sh
+cd ~/.local/share/nvim/site/pack/core/opt
+deno task --quiet build:fast
+```
+
+If you are running Linux (not WSL), you will need to edit this file and
+change 'wsl-view' to 'firefox':
+
+`~/.config/nvim/lua/plugins/peek.lua`
+
+## Tmux
+
+On Ubuntu, run the setup script from the Neovim config checkout:
+
+```bash
+bash tmux-setup/install.sh
+```
+
+The script installs tmux and git, backs up an existing `~/.tmux.conf`, installs
+the config and TPM plugins, and adds Bash Readline bindings so Alt-h/j/k/l
+reach tmux and Neovim. See [tmux-setup/README.md](tmux-setup/README.md) for details.
