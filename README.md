@@ -104,6 +104,7 @@ To keep another configuration alongside this one, clone into `~/.config/nvim-kic
 | --- | --- | --- | --- |
 | Lua | `lua_ls` | — | `stylua` |
 | Python | `ty` | `ruff` | `ruff_format` |
+| C / C++ | `clangd` | — | `clang-format` |
 | HTML | `html` | — | `biome` |
 | CSS | `cssls` | — | `biome` |
 | JavaScript / JSX | `ts_ls` | — | `biome` |
@@ -119,3 +120,4 @@ To keep another configuration alongside this one, clone into `~/.config/nvim-kic
 - The Astro LSP attaches only to Astro buffers. Astro uses Prettier because Biome is not configured for it.
 - Python formatting uses Conform's `ruff_format`; configure Ruff in `pyproject.toml`, `ruff.toml`, or `.ruff.toml`.
 - Lua formatting uses StyLua, which is a formatter rather than an LSP.
+- C/C++ static analysis uses clang-tidy through `clangd` (`--clang-tidy`).
