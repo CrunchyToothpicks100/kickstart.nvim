@@ -9,6 +9,7 @@ sudo apt install git -y
 cd ~/.config
 git clone https://github.com/CrunchyToothpicks100/kickstart.nvim
 mv kickstart.nvim/ nvim/
+cd ~/.config/nvim
 ```
 
 ## Curl
@@ -20,12 +21,14 @@ sudo apt install curl -y
 ## Latest Neovim (from curl)
 
 ```bash
-sudo curl -LO -o /opt/nvim.tar.gz https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-sudo rm -rf /opt/nvim
-sudo tar -xzf /opt/nvim.tar.gz
-sudo mv /opt/nvim-linux-x86_64 /opt/nvim
-sudo rm -rf /opt/nvim.tar.gz
+cd /opt
+sudo curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo rm -rf nvim
+sudo tar -xzf nvim-linux-x86_64.tar.gz
+sudo mv nvim-linux-x86_64 nvim
+sudo rm -rf nvim-linux-x86_64.tar.gz
 echo 'PATH="$PATH:/opt/nvim/bin"' >> ~/.bashrc
+cd ~/.config/nvim
 ```
 
 ## npm & nvm
@@ -38,21 +41,17 @@ nvm install --lts
 
 ## Build-essential (apt)
 
+You will need this for tree-sitter to compile
+
 ```bash
 sudo apt install build-essential -y
 ```
 
-## Unzip (apt)
-
-```bash
-sudo apt install unzip -y
-```
-
-## cargo and rustup
+## Cargo and Rustup
 
 ```bash
 curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
-echo 'PATH="$HOME/.cargo/bin/"' >> ~/.bashrc
+echo 'PATH="$PATH:/.cargo/bin/"' >> ~/.bashrc
 ```
 
 ## Tree-sitter-cli
@@ -100,17 +99,24 @@ echo "alias vpdir=\"cd ~/.local/share/nvim/site/pack/core/opt\"" >> ~/.bash_alia
 
 ## Deno for peek.nvim
 
-Peek.nvim is a useful viewing tool for markdown files, however you will
-need deno to build it
+Peek.nvim is a useful viewing tool for markdown files, however, it's buggy
+and might need some configuring. You will need Deno first.
 
 ```bash
 curl -fsSL https://deno.land/install.sh | sh
-cd ~/.local/share/nvim/site/pack/core/opt
-deno task --quiet build:fast
 ```
 
-If you are running Linux (not WSL), you will need to edit this file and
-change 'wsl-view' to 'firefox':
+The init.lua file should build the plugin itself, but sometimes it doesn't
+work. Try this.
+
+```bash
+cd ~/.local/share/nvim/site/pack/core/opt
+deno task --quiet build:fast
+cd ~/.config/nvim
+```
+
+If it still doesn't work, try editing this file. Switch the "app" to firefox,
+wsl-view, or xdg-open.
 
 `~/.config/nvim/lua/plugins/peek.lua`
 
