@@ -778,12 +778,12 @@ do
 
   vim.list_extend(ensure_installed, {
     'clangd', -- C++ LSP
-    'html-lsp', -- HTML
-    'json-lsp', -- JSON
     'markdownlint', -- Markdown
     'shellcheck', -- Bash
     'lua-language-server', -- Lua LSP
     'stylua', -- Lua formatting
+    'html-lsp', -- HTML
+    'json-lsp', -- JSON
     'astro-language-server', -- Astro
     'typescript-language-server', -- TS
     'prettierd', -- Astro (formatting)

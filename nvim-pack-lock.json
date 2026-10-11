@@ -108,6 +108,10 @@
       "rev": "d7220b55e16ed3c04e88086256def5d282429493",
       "src": "https://github.com/windwp/nvim-ts-autotag.git"
     },
+    "nvim-web-devicons": {
+      "rev": "dfbfaa967a6f7ec50789bead7ef87e336c1fa63c",
+      "src": "https://github.com/nvim-tree/nvim-web-devicons"
+    },
     "peek.nvim": {
       "rev": "5820d937d5414baea5f586dc2a3d912a74636e5b",
       "src": "https://github.com/toppair/peek.nvim"
