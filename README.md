@@ -2,11 +2,13 @@
 
 A personal Neovim configuration forked from [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim), extending its documented, customizable foundation with tools for everyday development.
 
-Includes Telescope search, Neo-tree file browsing, Treesitter highlighting, Blink completion, Git signs, debugging, automatic pairs and tags, color previews, Markdown previews, and tmux navigation. Plugins use Neovim's built-in `vim.pack`, while Mason installs configured language servers and development tools. Start with `init.lua`; additional settings and plugins live under `lua/`.
+Includes Telescope search, Neo-tree file browsing (Press '\\' to see it!), Treesitter highlighting, Blink completion, Git signs, debugging, automatic pairs and tags, color previews, Markdown previews, and tmux navigation. Plugins use Neovim's built-in `vim.pack`, while Mason installs configured language servers and development tools. Look in `init.lua`, and see how this configuration works.
+
+Plugins and settings are stored in the `/lua` folder, add and remove as you please. LSPs, linters and formatters will be automatically installed with Mason. You can uninstall/install anything you like, just type `:Mason` to see the GUI.
 
 ## Installation
 
-Use a recent Neovim build with `vim.pack` support. Back up your existing configuration before cloning. These steps target Ubuntu/Linux and WSL. Configuration paths are `~/.config/nvim` (or `$XDG_CONFIG_HOME/nvim`) on Linux/macOS and `%LOCALAPPDATA%\nvim` on Windows.
+Use a recent Neovim build with `vim.pack` support. If you don't have this, I have provided a script to install the latest release. Back up your existing configuration before cloning. These steps target Ubuntu/Linux and WSL. Configuration paths are `~/.config/nvim` (or `$XDG_CONFIG_HOME/nvim`) on Linux/macOS.
 
 ### Dependencies and checkout
 
@@ -22,7 +24,7 @@ cd ~/.config/nvim
 
 ### Neovim (Linux x86_64 release)
 
-If your package manager's Neovim is too old, install the release archive in `/opt/nvim`. Move aside an existing `/opt/nvim` installation first.
+These commands will install the latest release in `/opt/nvim`. Move aside an existing `/opt/nvim` installation first.
 
 ```bash
 cd /tmp
@@ -50,11 +52,19 @@ cargo install tree-sitter-cli
 
 If Cargo is missing from future shells, add `export PATH="$HOME/.cargo/bin:$PATH"` to `~/.bashrc`.
 
-### Fonts and clipboard
+### Nerd Fonts
 
-On Linux, run `bash install-nerd.sh` from this checkout to install JetBrainsMono Nerd Font; edit the script to choose another font. On Windows/WSL, download and install the font in Windows, then open Windows Terminal settings with `Ctrl+,` and set the profile font in its JSON configuration. `vim.g.have_nerd_font` is enabled in `init.lua`; disable it if you do not use a Nerd Font. Optional Ubuntu emoji support: `sudo apt install fonts-noto-color-emoji`.
+Nerd fonts are great for readability, and they comes with **icons**. Icons are really just fancy unicode characters. But we will need a nerd font to render all the icons that are used by a few different plugins, such as neo-tree, telescope, and mini.statusline.
 
-Check your display session with `echo "$XDG_SESSION_TYPE"`. For Wayland, run `sudo apt install wl-clipboard`; X11 users can use `xclip` or `xsel`, and Windows users can use `win32yank` or another clipboard provider.
+For Linux, run the included [install-nerd.sh](install-nerd.sh) script with bash. This will install JetBrainsMono Nerd Font; edit the script to choose another font. On GNOME terminals, look in the terminal settings. Create or edit a terminal profile with your new font, and you're good to go.
+
+On Windows/WSL, download and install the font in Windows, then open Windows Terminal settings with `Ctrl+,` and set the profile font in its JSON configuration. `vim.g.have_nerd_font` is enabled in `init.lua`; **disable it if you will not use a Nerd Font**.
+
+Optional Ubuntu emoji support: `sudo apt install fonts-noto-color-emoji`.
+
+### Clipboard
+
+Check your display session with `echo "$XDG_SESSION_TYPE"`. For Wayland, run `sudo apt install wl-clipboard`; X11 users can use `xclip` or `xsel`, and Windows users can use `win32yank` or another clipboard provider. The clipboard service used in our init.lua is 'unnamedplus', but you can find this and change it if you are having issues copy/pasting.
 
 ### Markdown preview and WSL
 
@@ -100,12 +110,12 @@ To keep another configuration alongside this one, clone into `~/.config/nvim-kic
 
 `nvim-lspconfig` configures Neovim's built-in LSP client, `nvim-lint` runs linters, and `conform.nvim` handles formatting. Conform formats on save with a 500 ms timeout and manually with `<leader>f`. LSP formatting is disabled via `lsp_format = 'never'`. Linters run on `BufEnter`, `BufWritePost`, and `InsertLeave` for modifiable buffers.
 
-`clang-format` and `ruff` will need to be installed **manually**. You can use `:Mason` in neovim or install them in the terminal. I enjoy using astral-uv since it's an all-in-one python tool.
+Because of my own personal setup, `clang-format` and `ruff` (which includes `ruff-format`) will need to be installed **manually**. You can use `:Mason` in neovim or install them in the terminal. I enjoy using astral-uv since it's an all-in-one Python management tool.
 
 ```bash
-sudo apt install clang-format
 sudo snap install uv
 uv tool install ruff
+uv tool install clang-format
 ```
 
 | Filetype | LSP | Linter | Formatter |
