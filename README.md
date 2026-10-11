@@ -80,7 +80,7 @@ deno task --quiet build:fast
 cd ~/.config/nvim
 ```
 
-If needed, adjust `app` in [lua/plugins/peek.lua](lua/plugins/peek.lua) to use Firefox, `wslview`, or `xdg-open`.
+If needed, adjust `app` in [lua/plugins/peek.lua](lua/plugins/peek.lua) to use `firefox`, `wslview`, or `xdg-open`.
 
 ### Tmux and first launch
 
@@ -99,6 +99,14 @@ To keep another configuration alongside this one, clone into `~/.config/nvim-kic
 ## LSP, linting, and formatting
 
 `nvim-lspconfig` configures Neovim's built-in LSP client, `nvim-lint` runs linters, and `conform.nvim` handles formatting. Conform formats on save with a 500 ms timeout and manually with `<leader>f`. LSP formatting is disabled via `lsp_format = 'never'`. Linters run on `BufEnter`, `BufWritePost`, and `InsertLeave` for modifiable buffers.
+
+`clang-format` and `ruff` will need to be installed **manually**. You can use `:Mason` in neovim or install them in the terminal. I enjoy using astral-uv since it's an all-in-one python tool.
+
+```bash
+sudo apt install clang-format
+sudo snap install uv
+uv tool install ruff
+```
 
 | Filetype | LSP | Linter | Formatter |
 | --- | --- | --- | --- |
@@ -120,5 +128,4 @@ To keep another configuration alongside this one, clone into `~/.config/nvim-kic
 - The Astro LSP attaches only to Astro buffers. Astro uses Prettier because Biome is not configured for it.
 - Python formatting uses Conform's `ruff_format`; configure Ruff in `pyproject.toml`, `ruff.toml`, or `.ruff.toml`.
 - Lua formatting uses StyLua, which is a formatter rather than an LSP.
-- C/C++ formatting requires `clang-format` to be installed manually and available on your PATH. On Ubuntu, run `sudo apt install clang-format`.
 - C/C++ static analysis uses clang-tidy through `clangd` (`--clang-tidy`).

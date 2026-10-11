@@ -1031,6 +1031,7 @@ do
   require 'commands'
   require 'options'
   require('cmake_runner').setup()
+  require('uv_runner').setup()
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
