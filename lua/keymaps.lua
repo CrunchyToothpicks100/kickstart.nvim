@@ -38,6 +38,7 @@ vim.keymap.set('n', '<A-s>', '<Cmd>source %<CR>', { desc = 'Source current lua f
 
 -- Terminal
 vim.keymap.set('t', 'jk', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', 'q', '<C-\\><C-n><Cmd>close<CR>', { desc = 'Close terminal window' })
 
 -- Colorscheme
 vim.keymap.set('n', '<leader>cs', function() tele.colorscheme {} end, { desc = '[C]olor Scheme' })

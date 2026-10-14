@@ -90,8 +90,7 @@ dap.configurations.cpp = {
       local project = cmake_runner.get_project()
       if not project then return nil end
 
-      local default = project.debug_dir
-      if project.default_target then default = vim.fs.joinpath(project.debug_dir, project.default_target) end
+      local default = project.root
 
       return vim.fn.input('Path to executable: ', default, 'file')
     end,
